@@ -13,14 +13,27 @@ class TopWordsStrategy(Strategy):
 
         def clean_text(text):
             text = text.lower()  # Convert text to lowercase
-            text = re.sub(r"http\\S+|www\\.\\S+", "", text)  # Remove URLs
+            text = re.sub(r"http|s\S+|www\.\S+", "", text)  # Remove URLs
             text = "".join(
-                ch if ch.isalnum() or ch.isspace() else " " for ch in text
+                ch if ch.isalnum() or ch.isspace() or ch == r"'" else " " for ch in text
             )  # Remove special characters
             tokens = text.split()  # Tokenize text by splitting on whitespace
 
-            # Remove stop words using sklearn's ENGLISH_STOP_WORDS
             tokens = [word for word in tokens if word not in ENGLISH_STOP_WORDS]
+            particles_and_articles = {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "just",
+                "use",
+                "t",
+                "s",
+                "it's",
+                "u",
+            }
+            tokens = [word for word in tokens if word not in particles_and_articles]
             return tokens
 
         df[column] = df[column].fillna("").apply(clean_text)
@@ -28,25 +41,25 @@ class TopWordsStrategy(Strategy):
 
     @staticmethod
     def calculate(df: pd.DataFrame) -> dict:
-        """Calculate the top words in the content column."""
         if "content" not in df.columns:
             raise ValueError("The dataframe must contain a 'content' column.")
 
         # Clean and tokenize the content column
-        df = TopWordsStrategy.clean_text_column(df, "content")
+        TopWordsStrategy.clean_text_column(df, "content")
 
         # Explode the tokens into a single DataFrame column
         exploded = df.explode("content")
 
-        # Group by tokens and document IDs and count occurrences
-        token_counts = (
-            exploded.groupby(["content", exploded.id]).size().reset_index(name="count")
+        # Group by tokens and count occurrences
+        token_counts = exploded["content"].value_counts().to_dict()
+
+        # Sort by frequency
+        top_words = sorted(token_counts.items(), key=lambda x: x[1], reverse=True)
+
+        # Add top 20 words as a list to the existing DataFrame
+        top_20_words = [word for word, _ in top_words[:150]][:20]
+        df["contains_top_words"] = df["content"].apply(
+            lambda tokens: [word for word in tokens if word in top_20_words]
         )
 
-        # Organize the results in dictionary format
-        detailed_counts = defaultdict(dict)
-        for _, row in token_counts.iterrows():
-            word, doc_id, count = row["content"], row["id"], row["count"]
-            detailed_counts[word][doc_id] = count
-
-        return {"detailed_counts": detailed_counts}
+        return {"inverted_index": top_words}
