@@ -2,8 +2,7 @@
 
 ## Topic:
 
-- ...
-- ...
+- AI tweets
 
 ## Project structure
 
