@@ -69,18 +69,11 @@ class TopWordsStrategy(Strategy):
         return {"inverted_index": top_words}
 
     @staticmethod
-    def create_pie_chart(top_words, output_file="top_words_pie_chart.html"):
-        """Create a Pie Chart using Plotly for the top words."""
-        labels = [word for word, count in top_words[:20]]
-        values = [count for word, count in top_words[:20]]
+    def generate_html(top_words: dict, output_file="top_words.html"):
+        """Generate an HTML file for top words pie chart."""
+        labels = [word for word, _ in top_words[:20]]
+        values = [count for _, count in top_words[:20]]
 
-        # Create the pie chart
-        fig = px.pie(
-            values=values,
-            names=labels,
-            title="Top 20 Most Popular Words",
-        )
-
-        # Save to HTML
+        fig = px.pie(names=labels, values=values, title="Top Keywords in Tweets")
         fig.write_html(output_file)
-        print(f"Pie chart saved to {output_file}")
+        print(f"Top Words Pie Chart saved to {output_file}")
