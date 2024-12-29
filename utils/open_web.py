@@ -1,5 +1,6 @@
 import webbrowser
 import pandas as pd
+import numpy as np
 
 data = "some request"
 
@@ -74,7 +75,7 @@ def get_values(data):
     return (
         top_words_strategy_keys, top_words_strategy_values,
         top_likes, top_retweets, top_general, productive_authors_strategy,
-        tweets_timeline_keys, tweets_timeline_values
+        tweets_timeline, tweets_timeline_keys, tweets_timeline_values
     )
 
 
@@ -107,12 +108,11 @@ def extract_retweet_counts(top):
 
 
 (top_words_strategy_keys, top_words_strategy_values, top_likes, top_retweets, top_general,
- productive_authors_strategy, tweets_timeline_keys, tweets_timeline_values) = get_values(data)
+ productive_authors_strategy, tweets_timeline, tweets_timeline_keys, tweets_timeline_values) = get_values(data)
 
 # extract usernames and counts of authors
 productive_authors_usernames = [author["username"] for author in data["productive_authors_strategy"]]
 productive_authors_post_counts = [author["post_count"] for author in data["productive_authors_strategy"]]
-
 
 # strings for HTML
 pie_chart_labels = "["
@@ -129,6 +129,18 @@ for num in top_words_strategy_values:
     pie_chart_data += ", "
 pie_chart_data = pie_chart_data[0:-2]
 pie_chart_data += "]"
+
+# min and max counts of tweets in this period (max, min), mean count of tweets per week
+min_count_tweets = np.min(tweets_timeline_values)
+max_count_tweets = np.max(tweets_timeline_values)
+mean_count_tweets = np.mean(tweets_timeline_values)
+
+reverse_tweets_timeline = {v: k for k, v in tweets_timeline.items()}
+
+min_count_week = reverse_tweets_timeline.get(min_count_tweets)
+max_count_week = reverse_tweets_timeline.get(max_count_tweets)
+
+
 
 try:
     with open('index.html', 'w') as file:
