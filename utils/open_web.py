@@ -124,6 +124,36 @@ reverse_tweets_timeline = {v: k for k, v in tweets_timeline.items()}
 min_count_week = reverse_tweets_timeline.get(min_count_tweets)
 max_count_week = reverse_tweets_timeline.get(max_count_tweets)
 
+import plotly.graph_objects as go
+
+
+def create_table(output_file="marginal_and_average_values.html"):
+    """create a table and save it as an HTML file"""
+
+    data = [
+        ['Highest number of posts per week', max_count_tweets, max_count_week],
+        ['Lowest number of posts per week', min_count_tweets, min_count_week],
+        ['Average number of posts per week', mean_count_tweets, 'All weeks']
+    ]
+
+    fig = go.Figure(go.Table(
+        header=dict(values=['<b>Metric</b>', '<b>Value</b>', '<b>Time Period</b>'],
+                    fill_color='#1da1f2',
+                    align='center',
+                    font=dict(color='white', size=14)),
+        cells=dict(values=list(zip(*data)),
+                   fill_color=[['#1da1f2', 'white', 'white']] * len(data),
+                   align=['left', 'center', 'center'],
+                   font=dict(color='black', size=12))
+    ))
+
+    fig.update_layout(
+        title='Marginal and Average Values',
+        title_x=0.5,
+        title_font=dict(size=20, color='#1da1f2', family="Arial, sans-serif")
+    )
+
+
 # strings for HTML
 pie_chart_labels = "["
 for word in top_words_strategy_keys:
