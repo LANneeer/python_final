@@ -1,6 +1,8 @@
 import webbrowser
 import pandas as pd
 
+data = "some request"
+
 
 def get_values(data):
     # separate top_words_strategy
@@ -104,12 +106,15 @@ def extract_retweet_counts(top):
     return [tweet.get("retweet_count", "") for tweet in top]
 
 
-top_words_strategy_keys, top_words_strategy_values, top_likes, top_retweets, top_general, productive_authors_strategy = get_values(
-    data)
+(top_words_strategy_keys, top_words_strategy_values, top_likes, top_retweets, top_general,
+ productive_authors_strategy, tweets_timeline_keys, tweets_timeline_values) = get_values(data)
 
+# extract usernames and counts of authors
 productive_authors_usernames = [author["username"] for author in data["productive_authors_strategy"]]
 productive_authors_post_counts = [author["post_count"] for author in data["productive_authors_strategy"]]
 
+
+# strings for HTML
 pie_chart_labels = "["
 for word in top_words_strategy_keys:
     pie_chart_labels += "'"
