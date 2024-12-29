@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from utils import Strategy
 import re
 from collections import defaultdict
+import plotly.express as px
 
 
 class TopWordsStrategy(Strategy):
@@ -45,21 +46,34 @@ class TopWordsStrategy(Strategy):
             raise ValueError("The dataframe must contain a 'content' column.")
 
         # Clean and tokenize the content column
-        TopWordsStrategy.clean_text_column(df, "content")
+        df_copy = df.copy()
+        TopWordsStrategy.clean_text_column(df_copy, "content")
 
         # Explode the tokens into a single DataFrame column
-        exploded = df.explode("content")
+        exploded = df_copy.explode("content")
 
         # Group by tokens and count occurrences
         token_counts = exploded["content"].value_counts().to_dict()
 
         # Sort by frequency
-        top_words = sorted(token_counts.items(), key=lambda x: x[1], reverse=True)
+        top_words = sorted(
+            tuple(token_counts.items()), key=lambda x: x[1], reverse=True
+        )
 
         # Add top 20 words as a list to the existing DataFrame
         top_20_words = [word for word, _ in top_words[:150]][:20]
-        df["contains_top_words"] = df["content"].apply(
+        df["contains_top_words"] = df_copy["content"].apply(
             lambda tokens: [word for word in tokens if word in top_20_words]
         )
 
         return {"inverted_index": top_words}
+
+    @staticmethod
+    def generate_html(top_words: dict, output_file="top_words.html"):
+        """Generate an HTML file for top words pie chart."""
+        labels = [word for word, _ in top_words[:20]]
+        values = [count for _, count in top_words[:20]]
+
+        fig = px.pie(names=labels, values=values, title="Top Keywords in Tweets")
+        fig.write_html(output_file)
+        print(f"Top Words Pie Chart saved to {output_file}")
