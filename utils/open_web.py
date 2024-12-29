@@ -1,107 +1,14 @@
 import webbrowser
-
-data = {
-    "top_words_strategy": {
-        "word1": 2313,
-        "word2": 2312
-    },
-    "top_tweets_strategy": {
-        "top_likes": [
-            {
-                "date": "2024-12-28",
-                "id": "1",
-                "content": "Example tweet 1",
-                "contains_top_words": ["word1"],
-                "username": "user1",
-                "like_count": 100,
-                "retweet_count": 50
-            },
-            {
-                "date": "2024-12-29",
-                "id": "2",
-                "content": "Example tweet 2",
-                "contains_top_words": ["word2"],
-                "username": "user2",
-                "like_count": 200,
-                "retweet_count": 70
-            },
-            {
-                "date": "2024-12-30",
-                "id": "3",
-                "content": "Example tweet 3",
-                "contains_top_words": ["word1", "word2"],
-                "username": "user3",
-                "like_count": 150,
-                "retweet_count": 60
-            }
-        ],
-        "top_retweets": [
-            {
-                "date": "2024-12-25",
-                "id": "101",
-                "content": "Retweet example 1",
-                "contains_top_words": ["word1"],
-                "username": "user4",
-                "like_count": 120,
-                "retweet_count": 80
-            },
-            {
-                "date": "2024-12-26",
-                "id": "102",
-                "content": "Retweet example 2",
-                "contains_top_words": ["word2"],
-                "username": "user5",
-                "like_count": 110,
-                "retweet_count": 90
-            }
-        ],
-        "top_general": [
-            {
-                "date": "2024-12-27",
-                "id": "1001",
-                "content": "General tweet 1",
-                "contains_top_words": ["word1", "word2"],
-                "username": "user6",
-                "like_count": 312133,
-                "retweet_count": 23312,
-                "popularity": 23132
-            },
-            {
-                "date": "2024-12-29",
-                "id": "1002",
-                "content": "General tweet 2",
-                "contains_top_words": ["word1"],
-                "username": "user7",
-                "like_count": 200000,
-                "retweet_count": 15000,
-                "popularity": 18000
-            }
-        ]
-    },
-    "productive_authors_strategy": [
-        {
-            "username": "user1",
-            "post_count": 2132
-        },
-        {
-            "username": "user2",
-            "post_count": 1900
-        },
-        {
-            "username": "user3",
-            "post_count": 2500
-        }
-    ]
-}
+import pandas as pd
 
 
 def get_values(data):
-    # Separate top_words_strategy
+    # separate top_words_strategy
     top_words_strategy = data.get("top_words_strategy", {})
-    top_words_strategy_keys = list(top_words_strategy.keys())  # Array for keys
-    top_words_strategy_values = list(top_words_strategy.values())  # Array for values
+    top_words_strategy_keys = list(top_words_strategy.keys())  # array for keys
+    top_words_strategy_values = list(top_words_strategy.values())  # array for values
 
-    # Separate top_tweets_strategy
+    # separate top_tweets_strategy
     top_tweets_strategy = data.get("top_tweets_strategy", {})
 
     # top_likes
@@ -147,7 +54,7 @@ def get_values(data):
         }
         top_general.append(tweet_data)
 
-    # Separate productive_authors_strategy
+    # separate productive_authors_strategy
     productive_authors_strategy = []
     for author in data.get("productive_authors_strategy", []):
         author_data = {
@@ -156,10 +63,16 @@ def get_values(data):
         }
         productive_authors_strategy.append(author_data)
 
-    # Return all the separated arrays
+    # separate tweets_timeline
+    tweets_timeline = data.get("tweets_timeline", {})
+    tweets_timeline_keys = list(tweets_timeline.keys())  # array for keys
+    tweets_timeline_values = list(tweets_timeline.values())  # array for values
+
+    # return all the separated arrays
     return (
         top_words_strategy_keys, top_words_strategy_values,
-        top_likes, top_retweets, top_general, productive_authors_strategy
+        top_likes, top_retweets, top_general, productive_authors_strategy,
+        tweets_timeline_keys, tweets_timeline_values
     )
 
 
@@ -491,9 +404,9 @@ try:
     new Chart(pieCtx, {
         type: 'pie',
         data: {
-            labels: {pie_chart_labels},
+            labels: {0},
             datasets: [{
-                data: {pie_chart_data},
+                data: {1},
                 backgroundColor: ['#1da1f2', '#657786', '#aab8c2']
             }]
         },
@@ -522,7 +435,7 @@ try:
 </body>
 </html>
 """
-        message = message.format(pie_chart_labels=pie_chart_labels, pie_chart_data=pie_chart_data)
+        message = message.format(pie_chart_labels, pie_chart_data)
         file.write(message)
 
     filename = 'index.html'
