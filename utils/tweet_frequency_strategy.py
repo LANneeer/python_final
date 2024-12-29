@@ -23,16 +23,15 @@ class TweetFrequencyStrategy(Strategy):
         return df_copy.to_dict(orient="records")
 
     @staticmethod
-    def generate_html(df: pd.DataFrame, output_file="tweet_frequency.html"):
+    def generate_html(data, output_file="tweet_frequency.html"):
         """Generate HTML for tweet frequency over time."""
-        df["date"] = pd.to_datetime(
-            df["date"], errors="coerce"
-        ).dt.date  # Coerce invalid dates to NaT
-        df = df.dropna(subset=["date"])  # Drop rows with invalid dates
-        daily_tweet_count = df.groupby("date").size()
+        df = pd.DataFrame.from_dict(data)
+        print(df)
+
         fig = px.line(
-            x=daily_tweet_count.index,
-            y=daily_tweet_count.values,
+            df,
+            x="date",
+            y="post_count",
             title="Tweet Frequency Over Time",
             labels={"x": "Date", "y": "Number of Tweets"},
         )

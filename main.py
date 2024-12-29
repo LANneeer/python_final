@@ -41,7 +41,7 @@ if __name__ == "__main__":
     # Execute and generate HTML for Tweet Frequency Strategy
     tweet_frequency = context.execute(TweetFrequencyStrategy())
     # print("Tweet Frequency:", tweet_frequency)
-    TweetFrequencyStrategy.generate_html(context.df, "tweet_frequency.html")
+    TweetFrequencyStrategy.generate_html(tweet_frequency, "tweet_frequency.html")
 
     # Calculate statistics for Tweet Frequency
     tweet_counts = pd.Series([entry["post_count"] for entry in tweet_frequency])
