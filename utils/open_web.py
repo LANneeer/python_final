@@ -1,5 +1,5 @@
 import webbrowser
-import pandas as pd
+import plotly.graph_objects as go
 import numpy as np
 
 data = "some request"
