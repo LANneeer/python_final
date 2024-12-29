@@ -56,7 +56,9 @@ class TopWordsStrategy(Strategy):
         token_counts = exploded["content"].value_counts().to_dict()
 
         # Sort by frequency
-        top_words = sorted(token_counts.items(), key=lambda x: x[1], reverse=True)
+        top_words = sorted(
+            tuple(token_counts.items()), key=lambda x: x[1], reverse=True
+        )
 
         # Add top 20 words as a list to the existing DataFrame
         top_20_words = [word for word, _ in top_words[:150]][:20]
