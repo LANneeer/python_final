@@ -26,7 +26,6 @@ class TweetFrequencyStrategy(Strategy):
     def generate_html(data, output_file="tweet_frequency.html"):
         """Generate HTML for tweet frequency over time."""
         df = pd.DataFrame.from_dict(data)
-        print(df)
 
         fig = px.line(
             df,

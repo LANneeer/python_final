@@ -7,6 +7,7 @@ from utils import ProductiveAuthorsStrategy
 from utils import TopTweetsStrategy
 from utils import TopWordsStrategy
 from utils import TweetFrequencyStrategy
+from utils.antitop_authors_strategy import AntiTopAuthorsStrategy
 from utils.top_authors_strategy import TopAuthorsStrategy
 
 if __name__ == "__main__":
@@ -37,6 +38,10 @@ if __name__ == "__main__":
     # Execute and generate HTML for Top Authors Strategy
     top_authors = context.execute(TopAuthorsStrategy())
     # TODO generate plotly HTML for such top
+
+    # Execute and generate HTML for Anti-Top Authors Strategy
+    anti_top_authors = context.execute(AntiTopAuthorsStrategy())
+    AntiTopAuthorsStrategy.generate_html(anti_top_authors, "anti_top_users_popularity.html")
 
     # Execute and generate HTML for Tweet Frequency Strategy
     tweet_frequency = context.execute(TweetFrequencyStrategy())
