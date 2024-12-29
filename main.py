@@ -7,6 +7,7 @@ from utils import ProductiveAuthorsStrategy
 from utils import TopTweetsStrategy
 from utils import TopWordsStrategy
 from utils import TweetFrequencyStrategy
+from utils.top_authors_strategy import TopAuthorsStrategy
 
 if __name__ == "__main__":
     # pandas configuration
@@ -26,12 +27,16 @@ if __name__ == "__main__":
     # print("Top Likes:", top_tweets["top_likes"])
     # print("Top Retweets:", top_tweets["top_retweets"])
     # print("Top General:", top_tweets["top_general"])
-    TopTweetsStrategy.generate_html(context.df, "top_tweets.html")
+    TopTweetsStrategy.generate_html(top_tweets, ("top_tweets_likes.html", "top_tweets_retweets.html", "top_tweets_popularity.html"))
 
     # Execute and generate HTML for Productive Authors Strategy
     productive_authors = context.execute(ProductiveAuthorsStrategy())
     # print("Productive Authors:", productive_authors)
-    ProductiveAuthorsStrategy.generate_html(context.df, "top_users.html")
+    ProductiveAuthorsStrategy.generate_html(productive_authors, "top_users_posts.html")
+
+    # Execute and generate HTML for Top Authors Strategy
+    top_authors = context.execute(TopAuthorsStrategy())
+    # TODO generate plotly HTML for such top
 
     # Execute and generate HTML for Tweet Frequency Strategy
     tweet_frequency = context.execute(TweetFrequencyStrategy())
