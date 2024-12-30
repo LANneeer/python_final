@@ -20,7 +20,9 @@ class TopTweetsStrategy(Strategy):
 
         # while calculating popularity values, like weights 1 point and retweet weights 10 points
         top_general = df.copy()
-        top_general["popularity"] = top_general["like_count"] + 10 * top_general["retweet_count"]
+        top_general["popularity"] = (
+            top_general["like_count"] + 10 * top_general["retweet_count"]
+        )
         top_general = top_general.sort_values("popularity", ascending=False).head(20)
 
         return {
@@ -30,7 +32,14 @@ class TopTweetsStrategy(Strategy):
         }
 
     @staticmethod
-    def generate_html(data, output_files=("top_tweets_likes.html", "top_tweets_retweets.html", "top_tweets_populatiry.html")):
+    def generate_html(
+        data,
+        output_files=(
+            "top_tweets_likes.html",
+            "top_tweets_retweets.html",
+            "top_tweets_populatiry.html",
+        ),
+    ):
         """Generate an HTML file for top tweets by likes and retweets."""
 
         html_content = f"""
@@ -62,7 +71,7 @@ class TopTweetsStrategy(Strategy):
                 </thead>
                 <tbody>
         """
-        for tweet in data['top_likes']:
+        for tweet in data["top_likes"]:
             html_content += f"""
                     <tr>
                         <td>{tweet['date']}</td>
@@ -113,7 +122,7 @@ class TopTweetsStrategy(Strategy):
                         </thead>
                         <tbody>
                 """
-        for tweet in data['top_retweets']:
+        for tweet in data["top_retweets"]:
             html_content += f"""
                             <tr>
                                 <td>{tweet['date']}</td>
@@ -160,11 +169,12 @@ class TopTweetsStrategy(Strategy):
                                 <th>username</th>
                                 <th>like_count</th>
                                 <th>retweet_count</th>
+                                <th>popularity</th>
                             </tr>
                         </thead>
                         <tbody>
                 """
-        for tweet in data['top_retweets']:
+        for tweet in data["top_general"]:
             html_content += f"""
                             <tr>
                                 <td>{tweet['date']}</td>
@@ -173,6 +183,7 @@ class TopTweetsStrategy(Strategy):
                                 <td>{tweet['username']}</td>
                                 <td>{tweet['like_count']}</td>
                                 <td>{tweet['retweet_count']}</td>
+                                <td>{tweet['popularity']}</td>
                             </tr>
                             """
         html_content += """

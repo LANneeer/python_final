@@ -99,7 +99,9 @@ if __name__ == "__main__":
     print(f"Max Tweets: {max_tweets}")
     print(f"Median Tweets: {median_tweets}")
     print("Tweet Frequency Statistics HTML saved to tweet_frequency_stats.html")
-
-    path = os.path.abspath("index.html")
-    webbrowser.open("file://" + path)
+    try:
+        path = os.path.abspath("index.html")
+        webbrowser.open("file://" + path)
+    except Exception as e:
+        print("Cannot open web site")
     print("Program finished. HTML files generated.")
