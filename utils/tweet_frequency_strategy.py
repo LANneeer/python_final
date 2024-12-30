@@ -1,5 +1,3 @@
-import time
-
 import plotly.express as px
 import pandas as pd
 
@@ -9,6 +7,11 @@ from utils import Strategy
 class TweetFrequencyStrategy(Strategy):
     @staticmethod
     def calculate(df: pd.DataFrame) -> dict:
+        """
+        Calculate the frequency of tweets over time.
+        Time complexity: O(n log n), where n is the number of rows in the DataFrame, as sorting is the most expensive operation.
+        Space complexity: O(n), where n is for storing the grouped and processed DataFrame.
+        """
         df_copy = df.copy()
 
         df_copy["date"] = pd.to_datetime(df_copy["date"], errors="coerce")

@@ -7,7 +7,11 @@ from utils import Strategy
 class TopTweetsStrategy(Strategy):
     @staticmethod
     def calculate(df: pd.DataFrame) -> dict:
-        """Calculate and construct a tops of tweets: by likes, by retweets and by popularity (general top)"""
+        """
+        Calculate and construct a tops of tweets: by likes, by retweets and by popularity (general top)
+        Time complexity: O(n log n), where n is the number of rows in the DataFrame, as sorting is the most expensive operation.
+        Space complexity: O(n), where n is for storing copies of the DataFrame and the computed popularity column.
+        """
 
         top_likes = df.copy().sort_values("like_count", ascending=False).head(20)
         top_likes = top_likes[0:20]

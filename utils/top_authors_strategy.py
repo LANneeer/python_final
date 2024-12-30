@@ -6,7 +6,12 @@ import plotly.express as px
 class TopAuthorsStrategy(Strategy):
     @staticmethod
     def calculate(df: pd.DataFrame) -> dict:
-        """Calculate and construct a tops of authours by their overall popularity"""
+        """
+        Calculate and construct a tops of authours by their overall popularity
+        Time complexity: O(n + k), where n is for a grouping by username and summing up the like_count and retweet_count.
+        k is for sorting, where k is the number of unique usernames.
+        Space complexity: O(k), where k is for storing grouped data in memory.
+        """
 
         authors_df = (
             df.copy()
