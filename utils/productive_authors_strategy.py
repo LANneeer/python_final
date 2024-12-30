@@ -6,10 +6,15 @@ from utils import Strategy
 class ProductiveAuthorsStrategy(Strategy):
     @staticmethod
     def calculate(df: pd.DataFrame) -> dict:
-        """Calculate and construct a top by post count of each author"""
+        """
+        Calculate and construct a top authors list by their overall popularity.
+        Time complexity: O(n + k), where n is the number of rows in the DataFrame and k is the number of unique usernames.
+        Space complexity: O(k), where k is the number of unique usernames stored in the grouped DataFrame.
+        """
 
         # construct the top simply applying group by username on data frame and sort it
-        productivity_df = (df.groupby("username")
+        productivity_df = (
+            df.groupby("username")
             .size()
             .reset_index(name="post_count")
             .sort_values("post_count", ascending=False)
@@ -30,4 +35,3 @@ class ProductiveAuthorsStrategy(Strategy):
         )
         fig.write_html(output_file)
         print(f"Top Posts Users Bar Chart saved to {output_file}")
-

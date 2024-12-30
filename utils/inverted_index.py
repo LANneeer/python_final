@@ -10,7 +10,11 @@ import plotly.express as px
 class TopWordsStrategy(Strategy):
     @staticmethod
     def clean_text_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
-        """Clean and tokenize text column in the dataframe."""
+        """
+        Clean and tokenize text column in the dataframe.
+        Time complexity: O(n * m), where n is the number of rows in the DataFrame and m is the length of text in the column.
+        Space complexity: O(n * m), for storing tokenized words in memory.
+        """
 
         def clean_text(text):
             text = text.lower()  # Convert text to lowercase
@@ -42,6 +46,11 @@ class TopWordsStrategy(Strategy):
 
     @staticmethod
     def calculate(df: pd.DataFrame) -> dict:
+        """
+        Calculate the top words in the 'content' column.
+        Time complexity: O(n * m), where n is the number of rows, m is the average length of text.
+        Space complexity: O(n * m), where n * m is for tokenized content.
+        """
         if "content" not in df.columns:
             raise ValueError("The dataframe must contain a 'content' column.")
 
