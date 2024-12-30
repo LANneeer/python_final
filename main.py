@@ -1,5 +1,5 @@
 import os
-
+import webbrowser
 import pandas as pd
 import numpy as np
 from utils import Context
@@ -28,7 +28,14 @@ if __name__ == "__main__":
     # print("Top Likes:", top_tweets["top_likes"])
     # print("Top Retweets:", top_tweets["top_retweets"])
     # print("Top General:", top_tweets["top_general"])
-    TopTweetsStrategy.generate_html(top_tweets, ("top_tweets_likes.html", "top_tweets_retweets.html", "top_tweets_popularity.html"))
+    TopTweetsStrategy.generate_html(
+        top_tweets,
+        (
+            "top_tweets_likes.html",
+            "top_tweets_retweets.html",
+            "top_tweets_popularity.html",
+        ),
+    )
 
     # Execute and generate HTML for Productive Authors Strategy
     productive_authors = context.execute(ProductiveAuthorsStrategy())
@@ -41,7 +48,9 @@ if __name__ == "__main__":
 
     # Execute and generate HTML for Anti-Top Authors Strategy
     anti_top_authors = context.execute(AntiTopAuthorsStrategy())
-    AntiTopAuthorsStrategy.generate_html(anti_top_authors, "anti_top_users_popularity.html")
+    AntiTopAuthorsStrategy.generate_html(
+        anti_top_authors, "anti_top_users_popularity.html"
+    )
 
     # Execute and generate HTML for Tweet Frequency Strategy
     tweet_frequency = context.execute(TweetFrequencyStrategy())
@@ -79,6 +88,10 @@ if __name__ == "__main__":
     </html>
     """
 
+    # Execute and generate HTML for Top Authors Strategy
+    top_authors = context.execute(TopAuthorsStrategy())
+    TopAuthorsStrategy.generate_html(top_authors, "top_users_popularity.html")
+
     with open("tweet_frequency_stats.html", "w") as file:
         file.write(stats_html)
 
@@ -87,4 +100,6 @@ if __name__ == "__main__":
     print(f"Median Tweets: {median_tweets}")
     print("Tweet Frequency Statistics HTML saved to tweet_frequency_stats.html")
 
+    path = os.path.abspath("index.html")
+    webbrowser.open("file://" + path)
     print("Program finished. HTML files generated.")
